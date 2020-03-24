@@ -1,0 +1,51 @@
+# R spatial funzioni spaziali
+
+# installare pacchetto sp
+install.packages("sp")
+
+# richiamare pacchetto sp
+library(sp)
+
+#dati
+data(meuse)
+
+# visualizare testa meuse
+head(meuse)
+
+# plot cadmium e lead
+# allegare il dataframe (database)
+
+attach(meuse)
+
+plot(cadmium, lead, col="pink", pch=2, cex=2)
+
+# exercise: plot di copper e zinco con carattere triangolo e colore verde
+
+plot(copper, zinc, col="green", pch=17, cex=2)
+
+# cambiare etichette
+plot(copper, zinc, col="green", pch=17, cex=2, xlab="rame", ylab="zinco")
+
+# multiframe o multipanel
+par(mfrow=c(1,2))
+plot(cadmium, lead, col="pink", pch=2, cex=2)
+plot(copper, zinc, col="green", pch=17, cex=2)
+
+# invertiamo grafici in riga colonna, a colonna riga
+par(mfrow=c(2,1))
+plot(cadmium, lead, col="blue", pch=17, cex=2)
+plot(copper, zinc, col="green", pch=17, cex=2)
+
+# multiframe automatico
+instal.packages("GGally")
+
+ggpairs(meuse[,3:6])
+
+# Spatial!
+head(meuse)
+
+coordinates(meuse)=~x+y
+plot(meuse)
+
+# funzione spplot per plottare dati spaziali
+spplot(meuse, "zinc")
