@@ -56,4 +56,43 @@ points(covids, pch=19)
 # natureearth= database internazionale
 # salvare R data(workspace)
 
+# save .RDATA
 
+# recuperiamo i dati interno alla cartella "lab"
+setwd("/Users/massimilianoapruzzese/Documents/lab")
+
+# caricare .RDATA
+load("spatstat_31_03_2020.RData")
+
+# ls() vedere i file
+ls()
+
+library(spatstat)
+plot(d)
+
+# palette dei colori
+cl <- colorRampPalette(c('yellow', 'orange', 'red')) (100)
+
+plot(d, col=cl)
+
+# Esercizio della mappa di densità dal verde al blu
+
+cl2 <- colorRampPalette(c('red','orange','yellow','green', 'blue')) (300)
+plot(d, col=cl2)
+
+points(covids)
+
+# inserire i file delle coastlines
+coastlines <- readOGR("ne_10m_coastline.shp")
+# Prima installare e richiamare libreria rgdal
+
+install.packages("rgdal")
+library(rgdal)
+
+# plottare coastlines
+plot(coastlines, add=TRUE)
+
+# Esercizio: plot della mappa di densità con nuova colorazione e aggiunta delle coastlines
+
+# cambiare colore alle coastline
+plot(coastlines, add=T, col= "grey")
