@@ -96,3 +96,35 @@ plot(coastlines, add=TRUE)
 
 # cambiare colore alle coastline
 plot(coastlines, add=T, col= "grey")
+
+# Interpolation
+attach(covid)
+marks(covids) <- covid$cases
+s <- Smooth(covids)
+plot(s)
+cl3 <- colorRampPalette(c('cyan', 'purple', 'red')) (200) 
+plot(s, col=cl3, main="COVID")
+points(covids)
+plot(coastlines, add=T, col= "dark grey")
+dev.off()
+
+par(mfrow=c(2, 1)) # both plots
+
+plot(d, col=cl2, main="Density")
+points(covids)
+plot(coastlines, add=T, col= "dark grey")
+plot(s, col=cl3, main="Interpolation")
+points(covids)
+plot(coastlines, add=T, col= "dark grey")
+
+## S Marino
+setwd("/Users/massimilianoapruzzese/Documents/lab")
+load("Tesi.RData")
+library(spatsat)
+attach(Tesi)
+
+# spatsat x, y, c(xmin, xmax) c(ymin, ymax)
+summary(Tesi)
+Tesippp <- ppp(Longitude, Latitude, c(12.41, 12.47), c(43.9, 43.95))
+Tesid <- density(Tesippp) 
+plot(Tesid)
