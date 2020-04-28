@@ -128,3 +128,65 @@ summary(Tesi)
 Tesippp <- ppp(Longitude, Latitude, c(12.41, 12.47), c(43.9, 43.95))
 Tesid <- density(Tesippp) 
 plot(Tesid)
+
+# Interpolazione
+load("sanmarino.RData")
+class(dT)
+"im"
+class(Tesi)
+"tbl_df"     "tbl"        "data.frame"
+class(Tesid)
+"im"
+class(Tesippp)
+"ppp"
+
+marks(Tesippp) <- Tesi$Species_richness
+interpol <- Smooth(Tesippp)
+
+# plot sanmarino
+plot(interpol)
+points(Tesippp, col="green")
+library(rgdal)
+sanmarino <- readOGR("San_Marino.shp")
+plot(sanmarino)
+plot(interpol, add=T)
+points(Tesippp, col="green") # mettere i confini sopra
+
+# exercise multiframe
+par(mfrow=c(2,1))
+plot(dT, main="density")
+points(Tesippp, col="green")
+plot(sanmarino, main="San Marino")
+plot(interpol, add=T, main="San Marino")
+plot(sanmarino, add=T)
+points(Tesippp, col="green")
+
+# orizontal
+par(mfrow=c(1, 2))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
