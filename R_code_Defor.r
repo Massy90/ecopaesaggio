@@ -71,3 +71,30 @@ View(output)
 # plottare output
 library(ggplot2)
 ?ggplot2
+
+# Defor.RData
+
+par(mfrow=c(1,2))
+cl <- colorRampPalette(c('black','green'))(100) # 
+plot(d1c$map, col=cl)
+plot(d2c$map, col=cl)
+
+################## plottare output ggplot2
+library(ggplot2)
+?ggplot2
+
+# before
+g1 <- ggplot(output, (aes(x=cover, y=before, color=cover)))+ geom_bar(stat="identity", fill="white")
+
+# after
+g2 <- ggplot(output, (aes(x=cover, y=after, color=cover)))+ geom_bar(stat="identity", fill="white")
+
+# altro pacchetto per fare un par con ggplot
+install.packages("gridExtra")
+library(gridExtra)
+?gridExtra
+
+grid.arrange(g1, g2, nrow=1)
+
+
+
