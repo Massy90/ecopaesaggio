@@ -71,8 +71,5 @@ setwd("/Users/massimilianoapruzzese/Documents/lab/esa_no2")
 cl <- colorRampPalette(c('red','orange','yellow'))(100)
 rlist <- list.files(pattern=".png", full.names = T)
 list1 <- lapply(rlist, raster)
-list1
-par(mfrow=c(4,4))
-dev.off()
 EN <- stack(list1)
 plot(EN, col=cl)
