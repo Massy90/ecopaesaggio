@@ -65,3 +65,14 @@ plot(EN10, col=cl)
 plot(EN11, col=cl)
 plot(EN12, col=cl)
 plot(EN13, col=cl)
+
+# importare tutto insieme stack
+setwd("/Users/massimilianoapruzzese/Documents/lab/esa_no2")
+cl <- colorRampPalette(c('red','orange','yellow'))(100)
+rlist <- list.files(pattern=".png", full.names = T)
+list1 <- lapply(rlist, raster)
+list1
+par(mfrow=c(4,4))
+dev.off()
+EN <- stack(list1)
+plot(EN, col=cl)
