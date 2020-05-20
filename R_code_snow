@@ -1,0 +1,38 @@
+setwd("/Users/massimilianoapruzzese/Documents/lab")
+install.packages("ncdf4")
+library(ncdf4)
+library(raster)
+library(rgdal)
+library(spatstat) # for random points
+library(maptools)
+
+# primo plot snowmay
+snowmay <- raster("c_gls_SCE500_202005180000_CEURO_MODIS_V1.0.1.nc")
+cl <- colorRampPalette(c('darkblue','blue','light blue'))(100)
+plot(snowmay, col =cl)
+
+# cartella snow -> plot multitemp snowmay
+setwd("/Users/massimilianoapruzzese/Documents/lab/snow")
+rlist <- list.files(pattern=".tif", full.names = T)
+list <- lapply(rlist, raster)
+snow.multitemp <- stack(list)
+plot(snow.multitemp, col=cl)
+
+# plot snow2000 e snow2020
+par(mfrow=c(1,2))
+plot(snow.multitemp$snow2000r, col=cl, zlim=c(0,200))
+plot(snow.multitemp$snow2020r, col=cl, zlim=c(0,200))
+
+difsnow = snow.multitemp$snow2020r - snow.multitemp$snow2000r
+
+cl2 <- colorRampPalette(c("blue", "white", "red"))(100)
+dev.off()
+plot(difsnow, col=cl2)
+
+## prediction = downloaded prediction.R from IOL
+
+source("prediction.r")
+
+# too much time plot "predicted.snow.2025.norm.tif"
+pred.snow2025 <- raster("predicted.snow.2025.norm.tif")
+plot(pred.snow2025, col=cl)
