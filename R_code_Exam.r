@@ -111,28 +111,28 @@ plot(copper, zinc, col="green", pch=17, cex=2)
 # CAMBIARE LE ETICHETTE xlab ylab
 plot(copper, zinc, col="green", pch=17, cex=2, xlab="rame", ylab="zinco")
 
-# multiframe o multipanel
+# FUNZIONE MULTIFRAME O MULTIPANNEL (PIù GRAFICI INSIEME)
 par(mfrow=c(1,2))
 plot(cadmium, lead, col="pink", pch=2, cex=2)
 plot(copper, zinc, col="green", pch=17, cex=2)
 
-# invertiamo grafici in riga colonna, a colonna riga
+# CAMBIO POSIZIONE GRAFICI NEL MULTIFRAME, 2 RIGHE, 1 COLONNA 
 par(mfrow=c(2,1))
 plot(cadmium, lead, col="blue", pch=17, cex=2)
 plot(copper, zinc, col="green", pch=17, cex=2)
 
-# multiframe automatico
-instal.packages("GGally")
+# MULTIFRAME AUTOMATICO
+install.packages("GGally")
 
 ggpairs(meuse[,3:6])
 
-# Spatial!
+# SPATIAL PLOT
 head(meuse)
 
 coordinates(meuse)=~x+y
 plot(meuse)
 
-# funzione spplot per plottare dati spaziali
+# FUNZIONE SPPLOT PER PLOTTARE I DATI SPAZIALI
 spplot(meuse, "zinc")
 #########################################################################
 #########################################################################
@@ -141,7 +141,6 @@ spplot(meuse, "zinc")
 ### r code Spatial.2
 ####### R spatial 2
 
-libreria sp
 library(sp)
 
 # dati da usare
@@ -157,7 +156,7 @@ spplot(meuse, "zinc")
 # exercise: spplot dei dati di rame
 spplot(meuse, "copper")
 
-# bubble
+# bubble CREA UN BUBBLE PLOT DI DATI SPAZIALI, CON GRANDEZZA DEI BUBBLE PARI ALLA DENSITà DEL DATO SPAZIALE
 bubble(meuse,"zinc")
 
 # bubble in rosso x rame
@@ -165,22 +164,23 @@ bubble(meuse,"copper", col="red")
 
 # foraminiferi (Sofia), carbon capture(Marco)
 
-# array (vettore)
+# CREARE UN ARRAY (O VETTORE)
 foram <- c(10, 20, 35, 55, 67, 80)
 carbon <- c(5, 15, 30, 70, 85, 99)
 
-#plot dei dati per vedere se sono relazionati (esempio)
+# PLOTTARE DATI PER VEDERE SE C'è UNA RELAZIONE TRA ESSI
 plot(foram, carbon, col="green", cex=2, pch=19)
 
 # Dati dall'esterno: covid-19
-# Specificare al softwear R che cartella prendere per i dati: Mac: documenti/lab
-setwd("Documents/lab")
-# Per me col Mac: setwd("/Users/massimilianoapruzzese/Documents/lab") 
+# SPECIFICARE AD R DA CHE CARTELLA PRENDERE I DATI, OVVERO LA SET WORKING DIRECTORY
 
-#leggere la tabella
+# Per Mac:
+setwd("/Users/massimilianoapruzzese/Documents/lab") 
+
+# FUNZIONE PER LEGGERE UNA TABELLA 
 read.table("covid_agg.csv")
 
-# dire a R i titoli: header
+# dDIRE AD R DI INSERIRE I "TITOLI": HEADERS
 covid <- read.table("covid_agg.csv", head=TRUE)
 
 ########################################################################
@@ -201,26 +201,24 @@ library(spatstat)
 # preparare la work directory (Mac)
 setwd("/Users/massimilianoapruzzese/Documents/lab")
 
-# importare dataset ( Es. covid)
+# importare dataset (Es. covid)
 covid <- read.table("covid_agg.csv", head=TRUE)
-
-# vedere tabella
 head(covid)
 
-# plot ($= collega una colonna al proprio dataset)
+# PLOT ($= COLLEGA UNA COLONNA CHE VOGLIAMO, AL DATASET)
 plot(covid$country, covid$case)
 plot(covid$country, covid$case, las=0) #las= label della x= parallele
 plot(covid$country, covid$case, las=1) #las= label della x= orizzontali
 plot(covid$country, covid$case, las=2) #las= label della x= perpendicolari
 plot(covid$country, covid$case, las=3) #las= label della x= verticali
 
-# diminuire grandezza dei punti (cex)
+# ARGOMENTO PER INGRANDIRE/DIMINUIRE DIMENSIONE DEI PUNTI (cex)
 plot(covid$country, covid$case, las=3, cex.lab=0.5) #non proprio funzionante
 
-# in questo caso cex.axis=
+# IN QUESTO CASO cex.axis=
 plot(covid$country, covid$case, las=3, cex.axis=0.5)
 
-# ggplot2 per fare plot fighi
+# ggplot2 PER PLOTTARE IN MODO COOL!!!
 
 # ggplot2
 data(mpg)
@@ -236,59 +234,52 @@ ggplot(mpg, aes(x=displ, y=hwy)) + geom_poligon()
 # ggplot di covid
 gglpot(covid, aes(x=lon, y=lat, size=cases)) + geom_point()
 
-# density (le aree con la densità più alta rispetto alla quantità di dati)
-# create dataset for spatstat
-covids <- ppp(lon, lat, c(-180, 180), c(-90, 90)) #(c= range dei vettori)
+# density (LE AREE CON LA DENSITà PIù ALTA RISPETTO ALLA QUANTITà DI DATI)
 
+# CREATE dataset for spatstat and PLOT
+attach(covid)
+covids <- ppp(lon, lat, c(-180, 180), c(-90, 90)) #(c= range dei vettori)
 d <- density(covids)
 plot(d)
 points(covids, pch=19)
 
-# natureearth= database internazionale
-# salvare R data(workspace)
-
-# save .RDATA
-
-# recuperiamo i dati interno alla cartella "lab"
+### RECUPERO DATI ALL'INTERNO DELLA CARTELLA "lab"
 setwd("/Users/massimilianoapruzzese/Documents/lab")
 
-# caricare .RDATA
+# CARICARE .RDATA
 load("spatstat_31_03_2020.RData")
 
-# ls() vedere i file
+# ls() PER VEDERE I FILES
 ls()
-
+# CARICARE spatsat
 library(spatstat)
 plot(d)
 
-# palette dei colori
+# CREAZIONE DELLA PALETTE DI COLORI DA ASSEGNARE NEI NOSTRI PLOT
 cl <- colorRampPalette(c('yellow', 'orange', 'red')) (100)
-
 plot(d, col=cl)
 
 # Esercizio della mappa di densità dal verde al blu
-
 cl2 <- colorRampPalette(c('red','orange','yellow','green', 'blue')) (300)
 plot(d, col=cl2)
-
 points(covids)
 
-# inserire i file delle coastlines
+# INSERIRE DATI SHP IN COASTLINE
 coastlines <- readOGR("ne_10m_coastline.shp")
-# Prima installare e richiamare libreria rgdal
 
+# PRIMA INSTALLARE E POI RICHIAMARE LIBRERIA rgdal
 install.packages("rgdal")
 library(rgdal)
 
-# plottare coastlines
+# plottare COASTLINE
 plot(coastlines, add=TRUE)
 
 # Esercizio: plot della mappa di densità con nuova colorazione e aggiunta delle coastlines
 
-# cambiare colore alle coastline
+# CAMBIARE COLORE alle coastline
 plot(coastlines, add=T, col= "grey")
 
-# Interpolation
+# INTERPOLAZIONE
 attach(covid)
 marks(covids) <- covid$cases
 s <- Smooth(covids)
@@ -308,7 +299,9 @@ plot(s, col=cl3, main="Interpolation")
 points(covids)
 plot(coastlines, add=T, col= "dark grey")
 
-## S Marino
+############### S. Marino
+# dT=density map, Tesi=dataset originale, Tesippp=point pattern
+
 setwd("/Users/massimilianoapruzzese/Documents/lab")
 load("Tesi.RData")
 library(spatsat)
@@ -320,8 +313,9 @@ Tesippp <- ppp(Longitude, Latitude, c(12.41, 12.47), c(43.9, 43.95))
 Tesid <- density(Tesippp) 
 plot(Tesid)
 
-# Interpolazione
+# INTERPOLAZIONE
 load("sanmarino.RData")
+# CONTROLLO DATASET
 class(dT)
 "im"
 class(Tesi)
@@ -331,6 +325,7 @@ class(Tesid)
 class(Tesippp)
 "ppp"
 
+# ESTRAI O MODIFICA I MARKS ASSOCIATI A UN PLOT DI SET DI DATI
 marks(Tesippp) <- Tesi$Species_richness
 interpol <- Smooth(Tesippp)
 
@@ -346,15 +341,14 @@ points(Tesippp, col="green") # mettere i confini sopra
 # exercise multiframe
 par(mfrow=c(2,1))
 plot(dT, main="density")
-points(Tesippp, col="green")
+points(ppp, col="green")
 plot(sanmarino, main="San Marino")
 plot(interpol, add=T, main="San Marino")
 plot(sanmarino, add=T)
 points(Tesippp, col="green")
 
-# orizontal
+# PLOT ORIZZONTALE
 par(mfrow=c(1, 2))
-
 ########################################################################
 #########################################################################
 #########################################################################
@@ -366,7 +360,7 @@ par(mfrow=c(1, 2))
 #set work space
 setwd("/Users/massimilianoapruzzese/Documents/lab")
 
-# installare pacchetti o richiamare
+# INSTALLARE O RICHIAMARE PACCHETTI
 library(raster)
 library(ggplot2)
 library(RStoolbox)
@@ -379,9 +373,10 @@ p224r63_2011 <- brick("p224r63_2011_masked.grd") # ci piace di +
 # plottare
 plot(p224r63_2011)
 
-# salvare R.data
+##### salvare R.data
 
-# sewd
+# setwd
+setwd("/Users/massimilianoapruzzese/Documents/lab")
 # Load file
 load(name_file.Rdata)
 
@@ -396,17 +391,17 @@ plot(p224r63_2011)
 # B6: thermal infrared
 # B7: medium infrared
 
-# color rampe palette
+# IMPOSTARE color rampe palette
 cl <- colorRampPalette(c('black','grey','light grey'))(100)
 
-# cambiare col a plot
+# CAMBIARE col al plot
 plot(p224r63_2011, col=cl)
 
-# solo banda 1 col blu
+# COLORRAMP PALETE SOLO DELLA BANDA 1 COL BLU
 clb <- colorRampPalette(c('dark blue','blue','light blue'))(100)
 
-# attach(data frame) non funziona con pacchetto raster
-# simbolo che lega la colonna (es. la banda) al dataset (immagine satellitare)
+## attach(data frame) NON FUNZIONA CON PACCHETTO RASTER
+## $ SIMBOLO CHE LEGA LA COLONNA (ES. LA BANDA) AL DATASET (IMAGE)
 
 plot(p224r63_2011$B1_sre, col=clb)
 
@@ -416,7 +411,7 @@ plot(p224r63_2011$B1_sre, col=clb)
 clIR<- colorRampPalette(c("red", "orange", "yellow"))(100)
 plot(p224r63_2011$B4_sre, col=clIR)
 
-# 4 bands plot (multiframe)
+# PLOT A 4 BANDE (multiframe)
 par(mfrow=c(2,2))
 
 #blue
@@ -430,6 +425,7 @@ plot(p224r63_2011$B2_sre, col=clg)
 #red
 clr <- colorRampPalette(c('dark red','red','pink'))(100)
 plot(p224r63_2011$B3_sre, col=clr)
+
 #NIR
 clIR<- colorRampPalette(c("red", "orange", "yellow"))(100)
 plot(p224r63_2011$B4_sre, col=clIR)
@@ -446,13 +442,13 @@ dev.off()
 
 plotRGB(p224r63_2011, r=3, g=2, b=1)
 
-# scura -> si utilizza stretch! pe strecciare i colori (argomento)
+# SE L'IMMAGINE è SCURA -> SI USA L'ARGOMENTO stretch! pe strecciare i colori
 plotRGB(p224r63, r=3, g=2, b=1, stretch="Lin")
 
 # utilizziamo NIR per vedere la vegetazione
 plotRGB(p224r63, r=4, g=3, b=2, stretch="Lin")
 
-# salvare pdf.
+# SALVARE .pdf
 pdf("primgraf.pdf")
 plotRGB(p224r63, r=3, g=2, b=1, stretch="Lin")
 dev.off
@@ -461,15 +457,15 @@ dev.off
 par(mfrow=c(1,2))
 plotRGB(p224r63, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63, r=3, g=2, b=1, stretch="Lin")
-# utilizziamo NIR per vedere la vegetazione
 
+# utilizziamo NIR per vedere la vegetazione
 # Exerc: nir nella componente green
 plotRGB(p224r63, r=3, g=4, b=1, stretch="Lin")
 
 # nir -> blue
 plotRGB(p224r63, r=3, g=2, b=4, stretch="Lin")
 
-# p224r63_1988 <- brick("p224r63_1988_masked.grd") # ci piace di +
+### p224r63_1988 <- brick("p224r63_1988_masked.grd") 
 p224r63_1988 <- brick("p224r63_1988_masked.grd")
 
 # plottare
@@ -522,12 +518,12 @@ plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
 
 # Exercise: plot image -> NIR
 
-# multiframe 1988_2011
+# MULTIFRAME PLOTS 1988 e 2011
 par(mfrow=c(1,2))
 plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin", main="1988")
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin", main="2011")
 
-# spetral indices
+# SPECTRAL INDICES
 # div1988 = nir1988-red1988
 
 dvi1988 <- (p224r63_1988$B4_sre - p224r63_1988$B3_sre)
@@ -550,7 +546,7 @@ plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plot(difdvi, col=cldifdvi)
 dev.off()
 
-# changing the grain (resol.)
+# changing the grain (CAMBIARE LA RISOLUZIONE)
 p224r63_2011lr <- aggregate(p224r63_2011, fact=10)
 par(mfrow=c(2, 1))
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
@@ -559,7 +555,7 @@ plotRGB(p224r63_2011lr, r=4, g=3, b=2, stretch="Lin")
 # lower resolut.
 p224r63_2011lr50 <- aggregate(p224r63_2011, fact=50)
 
-#original 30m
+# original 30m
 par(mfrow=c(3, 1))
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011lr, r=4, g=3, b=2, stretch="Lin")
@@ -591,7 +587,6 @@ library(raster)
 # caricare dati da esterno con brick
 defor1 <- brick("/Users/massimilianoapruzzese/Documents/lab/defor1.jpg")
 defor2 <- brick("/Users/massimilianoapruzzese/Documents/lab/defor2.jpg")
-defor1
 
 # names      : defor1.1, defor1.2, defor1.3
 # defor1.1 = NIR
@@ -605,7 +600,7 @@ par(mfrow=c(2,1))
 plotRGB(defor1, r=1, g=2, b=3, stretch="Lin")
 plotRGB(defor2, r=1, g=2, b=3, stretch="Lin")
 
-# class non super visionata
+# CLASSIFICAZIONE NON SUPER VISIONATA (classificazione dei colori in base ai pixel)
 library(RStoolbox)
 d1c <- unsuperClass(defor1, nClasses=2)
 d1c
@@ -619,6 +614,7 @@ plot(d1c$map, col=cl)
 d2c <- unsuperClass(defor2, nClasses = 2)
 plot(d2c$map, col=cl)
 dev.off()
+# plot di entrambe le immagini classificate
 par(mfrow=c(1,2))
 plot(d1c$map, col=cl)
 plot(d2c$map, col=cl)
@@ -653,10 +649,10 @@ before <- c(89.5, 10.5)
 after <- c(52, 48)
 output <- data.frame(cover,before, after)
 View(output)
-
-# plottare output
 library(ggplot2)
-?ggplot2
+p1<-ggplot(output, aes(x=cover, y=before, color=cover)) + geom_bar(stat="identity", fill="white") 
+p2<-ggplot(output, aes(x=cover, y=after, color=cover)) + geom_bar(stat="identity", fill="white")
+
 ####################################################
 ####################################################
 #####################################################
@@ -731,13 +727,16 @@ plot(EN11, col=cl)
 plot(EN12, col=cl)
 plot(EN13, col=cl)
 
-# importare tutto insieme stack
+# IMPORTATE TUTTE LE IMMAGINI INSIEME E PLOTTARE (stack)
 setwd("/Users/massimilianoapruzzese/Documents/lab/esa_no2")
 cl <- colorRampPalette(c('red','orange','yellow'))(100)
 rlist <- list.files(pattern=".png", full.names = T)
+
+# RETURN THE LIST
 list1 <- lapply(rlist, raster)
 EN <- stack(list1)
 plot(EN, col=cl)
+
 ############################################################
 ############################################################
 #############################################################
@@ -752,12 +751,12 @@ library(rgdal)
 library(spatstat) # for random points
 library(maptools)
 
-# primo plot snowmay
+# PRIMO PLOT DI SNOWMAY
 snowmay <- raster("c_gls_SCE500_202005180000_CEURO_MODIS_V1.0.1.nc")
 cl <- colorRampPalette(c('darkblue','blue','light blue'))(100)
 plot(snowmay, col =cl)
 
-# cartella snow -> plot multitemp snowmay
+# cartella snow -> PER PLOT MULTITEMPORALE DI SNOWMAY
 setwd("/Users/massimilianoapruzzese/Documents/lab/snow")
 rlist <- list.files(pattern=".tif", full.names = T)
 list <- lapply(rlist, raster)
@@ -775,13 +774,14 @@ cl2 <- colorRampPalette(c("blue", "white", "red"))(100)
 dev.off()
 plot(difsnow, col=cl2)
 
-## prediction = downloaded prediction.R from IOL
+## prediction = download prediction.R from IOL
 
 source("prediction.r")
 
 # too much time plot "predicted.snow.2025.norm.tif"
 pred.snow2025 <- raster("predicted.snow.2025.norm.tif")
 plot(pred.snow2025, col=cl)
+
 ###############################################################
 ################################################################
 #################################################################
@@ -806,9 +806,7 @@ plot(d1c,col=cl)
 plot(d2c,col=cl)
 
 # forest: class 2; agriculture: class 1
-d1c.for <- reclassify(d1c, cbind(1, NA))
-
-# for
+d1c.for <- reclassify(d1c, cbind(1,NA))
 d2c.for <- reclassify(d2c, cbind(1,NA))
 
 # plot dc1 dc2 forest
@@ -817,7 +815,7 @@ par(mfrow=c(1,2))
 plot(d1c.for,col=cl)
 plot(d2c.for, col=cl)
 
-### clump function to create patches
+### CLUMP FUNCTION TO CREATE PATCHES
 install.packages("igraph")
 library(igraph)
 d1c.for.patches <- clump(d1c.for)
@@ -828,11 +826,13 @@ par(mfrow=c(1,2))
 cl <- colorRampPalette(c('dark blue','blue','green','orange','yellow','red'))(100) #
 plot(d1c.for.patches,col=cl)
 plot(d2c.for.patches, col=cl)
+
+# SALVARE UN FILE ED ESPORTARLO
 writeRaster(d1c.for.patches, "d1c.for.patches.tif")
 writeRaster(d2c.for.patches, "d2c.for.patches.tif")
 
-### max patches d1 = 301
-### max patches d2 = 1212
+### MAX PATCHES d1 = 301
+### MAX PATCHES d2 = 1212
 time <- c("Bf deforest", "Af deforest")
 npatches <- c(301,1212)
 
