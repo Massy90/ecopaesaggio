@@ -8,7 +8,8 @@
 #7. R_code_multitemp.r   
 #8. R_code_multitemp_NO2.r   
 #9. R_code_snow.r   
-#10. R_code_patches.r 
+#10. R_code_patches.r
+#11. R_code_crop.r
 
 ### 1. r code first
 # PRIMO SVILUPPO DI CODICE
@@ -835,11 +836,10 @@ writeRaster(d2c.for.patches, "d2c.for.patches.tif")
 ### MAX PATCHES d2 = 1212
 time <- c("Bf deforest", "Af deforest")
 npatches <- c(301,1212)
-
 output <- data.frame(time,npatches)
 attach(output)
 
-#ggplot
+#ggplot FINALE
 library(ggplot2)
 dev.off()
 ggplot(output, aes(x=time, y=npatches, color="red")) + geom_bar(stat="identity", fill="white")
@@ -848,7 +848,35 @@ ggplot(output, aes(x=time, y=npatches, color="red")) + geom_bar(stat="identity",
 ################################################################
 #################################################################
 
-###
+### 11. R code crop - exam simulation
+
+# SETWD
+setwd("/Users/massimilianoapruzzese/Documents/lab")
+
+# exercise: upload the whole snow set
+rlist <- list.files(pattern=".tif", full.names = T)
+list <- lapply(rlist, raster)
+snow.multitemp <- stack(list)
+
+# PLOTTARE TUTTE LE IMMAGINI
+clb <- colorRampPalette(c('dark blue','blue','light blue'))(100)
+plot(snow.multitemp, col=clb)
+
+# PLOT SOLO 1 IMMAGINE E CAMBIARE ESTENZIONE O FARE ZOOM (SU ITALIA)
+plot(snow.multitemp$snow2010r, col=clb)
+extension <- c(6, 20, 35, 50)
+plot(snow.multitemp$snow2010r, col=clb, ext= extension)
+zoom(snow.multitemp$snow2010r, col=clb, ext= drawExtent())
+
+# PLOTTARE TUTTA LA SERIE MULTITEMPORALE CON ESTENSIONE SOLO SULL'ITALIA
+ita <- crop(snow.multitemp, col=clb, extension)
+plot(ita)
+
+# METTERE LE LEGENDE TUTTE UGUALI
+plot(ita, col= clb, zlim= c(20,200))
+
+# BOXPLOT PER CONFRONTARE LA COPERTURA
+boxplot(ita, horizontal=T,outline=F)
 
 
 
