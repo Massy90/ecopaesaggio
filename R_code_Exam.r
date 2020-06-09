@@ -671,9 +671,10 @@ setwd("/Users/massimilianoapruzzese/Documents/lab")
 
 library(raster)
 
-# raster
+# raster CREATE A RASTER-LAYER OBJECT. RASTER-LAYER OBJECTS CAN BE CREATED FROM SCRATCH, FILE,
+# EXTENT OBJECT, MATRIX, IMAGE OBJECT OR RASTER SPATIAL
+
 EN01 <- raster("EN_0001.png")
-dev.off()
 plot(EN01)
 EN02 <- raster("EN_0002.png")
 EN03 <- raster("EN_0003.png")
@@ -688,13 +689,12 @@ EN11 <- raster("EN_0011.png")
 EN12 <- raster("EN_0012.png")
 EN13 <- raster("EN_0013.png")
 
-cl <- colorRampPalette(c('red','orange','yellow'))(100) # 
-
+cl <- colorRampPalette(c('red','orange','yellow'))(100) #
 par(mfrow=c(1,2))
 plot(EN01, col=cl)
 plot(EN13, col=cl)
 
-# difference
+# DIFFERENCE TO SEE NO2 DIFFUSION
 dev.off()
 difno2 <- EN13-EN01
 cldif <- colorRampPalette(c('blue','black','yellow'))(100) # 
@@ -702,7 +702,7 @@ plot(difno2, col=cldif)
 
 cl <- colorRampPalette(c('red','orange','yellow'))(100) # 
 
-# PLOT ALL THE DATA
+# PLOT ALL RASTERS
 plot(EN01, col=cl)
 plot(EN02, col=cl)
 plot(EN03, col=cl)
@@ -717,7 +717,7 @@ plot(EN11, col=cl)
 plot(EN12, col=cl)
 plot(EN13, col=cl)
 
-# par plots
+# MULTIFRAME PLOT
 par(mfrow=c(4,4))
 plot(EN01, col=cl)
 plot(EN02, col=cl)
@@ -733,13 +733,13 @@ plot(EN11, col=cl)
 plot(EN12, col=cl)
 plot(EN13, col=cl)
 
-# IMPORTATE TUTTE LE IMMAGINI INSIEME E PLOTTARE (stack)
+# IMPORT AND PLOT ALL IMAGES AT ONCE (stack)
 setwd("/Users/massimilianoapruzzese/Documents/lab/esa_no2")
 cl <- colorRampPalette(c('red','orange','yellow'))(100)
-rlist <- list.files(pattern=".png", full.names = T)
+rlist <- list.files(pattern=".png", full.names = T) # TAKE A LIST OF SPECIFIC TYPE OF FILES
 
 # RETURN THE LIST
-list1 <- lapply(rlist, raster)
+list1 <- lapply(rlist, raster) # LAPPLY TAKES DATA OR MATRIX AS AN IMPUT AND GIVES UOTPUT IN VECTOR, LIST OR ARRAY
 EN <- stack(list1)
 plot(EN, col=cl)
 
@@ -757,33 +757,31 @@ library(rgdal)
 library(spatstat) # for random points
 library(maptools)
 
-# PRIMO PLOT DI SNOWMAY
+# FIRST PLOT OF SNOWMAY
 snowmay <- raster("c_gls_SCE500_202005180000_CEURO_MODIS_V1.0.1.nc")
 cl <- colorRampPalette(c('darkblue','blue','light blue'))(100)
 plot(snowmay, col =cl)
 
-# cartella snow -> PER PLOT MULTITEMPORALE DI SNOWMAY
+# USE SNOW FOLDER TO PLOT ALL LIST OF FILES AT ONCE  (MULTITEMPORAL SNOWMAY)
 setwd("/Users/massimilianoapruzzese/Documents/lab/snow")
 rlist <- list.files(pattern=".tif", full.names = T)
 list <- lapply(rlist, raster)
-snow.multitemp <- stack(list)
+snow.multitemp <- stack(list) # A RASTER-STACK IS RASTER-LAYER OBJECTS WITH THE SAME SPATIAL EXTENT AND RESOLUTION
 plot(snow.multitemp, col=cl)
 
-# plot snow2000 e snow2020
+# PLOT snow2000 e snow2020 IN MULTIFRAME
 par(mfrow=c(1,2))
 plot(snow.multitemp$snow2000r, col=cl, zlim=c(0,200))
 plot(snow.multitemp$snow2020r, col=cl, zlim=c(0,200))
 
 difsnow = snow.multitemp$snow2020r - snow.multitemp$snow2000r
-
 cl2 <- colorRampPalette(c("blue", "white", "red"))(100)
 dev.off()
 plot(difsnow, col=cl2)
 
 ## prediction = download prediction.R from IOL
 
-source("prediction.r")
-
+source("prediction.r") # source CAUSES R TO ACCEPT ITS INPUT FROM THE NAMED FILE OR URL OR CONNECTION OR EXPRESSIONS DIRECTLY
 # too much time plot "predicted.snow.2025.norm.tif"
 pred.snow2025 <- raster("predicted.snow.2025.norm.tif")
 plot(pred.snow2025, col=cl)
@@ -792,7 +790,7 @@ plot(pred.snow2025, col=cl)
 ################################################################
 #################################################################
 
-### 10. r code patches
+### 10. R code patches
 
 setwd("/Users/massimilianoapruzzese/Documents/lab")
 install.packages("ncdf4")
@@ -856,28 +854,27 @@ ggplot(output, aes(x=time, y=npatches, color="red")) + geom_bar(stat="identity",
 ### 11. R code crop - exam simulation
 
 # SETWD
-setwd("/Users/massimilianoapruzzese/Documents/lab")
+setwd("/Users/massimilianoapruzzese/Documents/lab/snow")
 
-# exercise: upload the whole snow set
+# Exercise: PLOT ALL THE SNOW SET
 rlist <- list.files(pattern=".tif", full.names = T)
 list <- lapply(rlist, raster)
 snow.multitemp <- stack(list)
-
-# PLOTTARE TUTTE LE IMMAGINI
 clb <- colorRampPalette(c('dark blue','blue','light blue'))(100)
 plot(snow.multitemp, col=clb)
 
-# PLOT SOLO 1 IMMAGINE E CAMBIARE ESTENZIONE O FARE ZOOM (SU ITALIA)
+# PLOT 1 IMMAGE AND MAKE ZOOM (ON ITALY)
 plot(snow.multitemp$snow2010r, col=clb)
 extension <- c(6, 20, 35, 50)
-plot(snow.multitemp$snow2010r, col=clb, ext= extension)
-zoom(snow.multitemp$snow2010r, col=clb, ext= drawExtent())
+plot(snow.multitemp$snow2010r, col=clb, ext= extension) # PLOT ARGUMENT to zoom in a region 
+zoom(snow.multitemp$snow2010r, col=clb, ext= drawExtent()) # FUNCTION TO MAKE ZOOM MANUALLY
 
 # PLOTTARE TUTTA LA SERIE MULTITEMPORALE CON ESTENSIONE SOLO SULL'ITALIA
-ita <- crop(snow.multitemp, col=clb, extension)
+PLOT THE ALL MULTITEMP SET WITH ZOOM ON ITALY USING crop
+ita <- crop(snow.multitemp, col=clb, extension) # crop RETURNS A GEOGRAPHIC SUBSET OF AN OBJECT AS SPECIFIED BY AN EXTENT OBJECT
 plot(ita)
 
-# METTERE LE LEGENDE TUTTE UGUALI
+# METTERE LE LEGENDE TUTTE UGUALI MAKE ALL LEGENDS EQUALS
 plot(ita, col= clb, zlim= c(20,200))
 
 # BOXPLOT PER CONFRONTARE LA COPERTURA
@@ -906,13 +903,13 @@ species$Occurrence
 
 plot(species)
 
-plot(species[species$Occurrence == 1,],col='blue',pch=16)
-points(species[species$Occurrence == 0,],col='red',pch=16)
+plot(species[species$Occurrence == 1,],col='blue',pch=16) # PRESENCE
+points(species[species$Occurrence == 0,],col='red',pch=16) # ABSENCE
 
-# model
+# MODEL
 path <- system.file("external", package="sdm") # PATH TO THE FOLDER CONTAINS THE DATA
 
-#predictors
+# PREDICTORS
 lst <- list.files(path=path,pattern='asc$',full.names = T) # LIST THE NAME OF THE RASTER FILES
 
 # STACK IS A FUNCTION IN THE RASTER PACKAGE, TO READ/CREATE A MULTI-LAYERES RASTER DATASET
