@@ -73,25 +73,28 @@ panel.histograms <- function(x, ...)
 pairs(meuse[, 3:6], lower.panel= panel.correlation, upper.panel= panel.smoothing, diagonal panel= 
 panel.histograms) 
 
-# PLOTTARE OBJECTIVES DI UNA TABELLA
+# PLOTTARE OBJECTIVES OF A TABLE ($)
 plot(meuse$cadmium, meuse$copper)
 
+# HELPING THE DIRECT ACCESS TO DATA.FRAME COLOUMS 
 attach(meuse)
 
+# PRODUCE A GRAPHIC ON THE RELATION BETWEEN 2 QUANTITATIVE VARIABLES
 plot(cadmium,copper)
 
+# INSIDE THE FUNCTION YOU CAN CHANGES PARAMETERS TO CUSTOMIZE YOR GRAPH
 > plot(cadmium,copper, pch=17, col="blue", main="primo plot")
 > plot(cadmium,copper, pch=17, col="blue", main="primo plot", xlab="cadmio", ylab="rame")
 #####################################################################
 #####################################################################
 #####################################################################
 
-### r code Spatial
-# R spatial funzioni spaziali
+### R code Spatial
+# R SPATIAL FUNCTIONS
 
-# INSTALLARE  e RICHIAMARE pacchetto sp
+# INSTALL AND RECALL sp PACKAGES 
 install.packages("sp")
-library(sp)
+library(sp) # A PACKAGE THAT PROVIDE CLASSES AND METHODS FOR SPATIAL DATA: POINT, LINES, POLYGONS AND GRID
 
 # RICHIAMARE DATI
 data(meuse)
@@ -113,18 +116,21 @@ plot(copper, zinc, col="green", pch=17, cex=2)
 plot(copper, zinc, col="green", pch=17, cex=2, xlab="rame", ylab="zinco")
 
 # FUNZIONE MULTIFRAME O MULTIPANNEL (PIù GRAFICI INSIEME)
-par(mfrow=c(1,2))
+par(mfrow=c(1,2)) # 1 ROW, 2 COLUMNS
 plot(cadmium, lead, col="pink", pch=2, cex=2)
 plot(copper, zinc, col="green", pch=17, cex=2)
 
 # CAMBIO POSIZIONE GRAFICI NEL MULTIFRAME, 2 RIGHE, 1 COLONNA 
-par(mfrow=c(2,1))
+par(mfrow=c(2,1)) # 2 ROWS, 1 COLUMN
 plot(cadmium, lead, col="blue", pch=17, cex=2)
 plot(copper, zinc, col="green", pch=17, cex=2)
 
-# MULTIFRAME AUTOMATICO
+# AUTOMATIC MULTIFRAME
+# "GGALLY" EXTENDS "GGPLOT2" BY ADDING SEVERAL FUNCTIONS TO FACILITATE THE COMBINING OF GEOMETRIC OBJECTS
+# WITH TRANSFORMED DATA
 install.packages("GGally")
 
+# ggplot2 GENERALIZED PAIRS PLOT
 ggpairs(meuse[,3:6])
 
 # SPATIAL PLOT
@@ -134,7 +140,8 @@ coordinates(meuse)=~x+y
 plot(meuse)
 
 # FUNZIONE SPPLOT PER PLOTTARE I DATI SPAZIALI
-spplot(meuse, "zinc")
+spplot(meuse, "zinc") # GRID PLOT METHODS FOR SPATIAL DATA WITH ATTRIBUTES
+
 #########################################################################
 #########################################################################
 #########################################################################
@@ -148,8 +155,8 @@ library(sp)
 data(meuse)
 head(meuse)
 
-# coord. del dataset (in R= dataframe)
-coordinates(meuse)=~x+y
+#SET SPATIAL COORDINATES TO CREATE A SPATIAL OBJECT OR RECALL SPATIAL COORDINATES FROM A SPATIAL OBJECT
+coordinates(meuse)=~x+y 
 
 #spplot dei dati di zinco
 spplot(meuse, "zinc")
@@ -160,12 +167,12 @@ spplot(meuse, "copper")
 # bubble CREA UN BUBBLE PLOT DI DATI SPAZIALI, CON GRANDEZZA DEI BUBBLE PARI ALLA DENSITà DEL DATO SPAZIALE
 bubble(meuse,"zinc")
 
-# bubble in rosso x rame
+# bubble IN RED FOR COPPER
 bubble(meuse,"copper", col="red")
 
 # foraminiferi (Sofia), carbon capture(Marco)
 
-# CREARE UN ARRAY (O VETTORE)
+# CREARE UN ARRAY (VETTORE)
 foram <- c(10, 20, 35, 55, 67, 80)
 carbon <- c(5, 15, 30, 70, 85, 99)
 
@@ -181,14 +188,14 @@ setwd("/Users/massimilianoapruzzese/Documents/lab")
 # FUNZIONE PER LEGGERE UNA TABELLA 
 read.table("covid_agg.csv")
 
-# dDIRE AD R DI INSERIRE I "TITOLI": HEADERS
+# DIRE AD R DI INSERIRE I "TITOLI": HEADERS
 covid <- read.table("covid_agg.csv", head=TRUE)
 
 ########################################################################
 #########################################################################
 #########################################################################
 
-### r code Point Pattern
+### R code Point Pattern
 
 # Codice per analisi dei point Patterns
 
@@ -202,11 +209,11 @@ library(spatstat)
 # preparare la work directory (Mac)
 setwd("/Users/massimilianoapruzzese/Documents/lab")
 
-# importare dataset (Es. covid)
+# IMPORT DATASET (EX. covid)
 covid <- read.table("covid_agg.csv", head=TRUE)
 head(covid)
 
-# PLOT ($= COLLEGA UNA COLONNA CHE VOGLIAMO, AL DATASET)
+# PLOT ($ = TO LINK A COLUMN WE WANT, TO THE DATASET 
 plot(covid$country, covid$case)
 plot(covid$country, covid$case, las=0) #las= label della x= parallele
 plot(covid$country, covid$case, las=1) #las= label della x= orizzontali
@@ -219,15 +226,15 @@ plot(covid$country, covid$case, las=3, cex.lab=0.5) #non proprio funzionante
 # IN QUESTO CASO cex.axis=
 plot(covid$country, covid$case, las=3, cex.axis=0.5)
 
-# ggplot2 PER PLOTTARE IN MODO COOL!!!
+# ggplot2 TO PLOT COOL GRAPHS!!!
 
 # ggplot2
 data(mpg)
 head(mpg)
 
 # data
-# aest (estetica del grafico e variabili)
-# tipo di geometria
+# aest AESTHETICS OF GRAPH
+# geom_ GEOMETRY TYPE
 ggplot(mpg, aes(x=displ, y=hwy)) + geom_point()
 ggplot(mpg, aes(x=displ, y=hwy)) + geom_line() # tipo per l'analisi dei trend
 ggplot(mpg, aes(x=displ, y=hwy)) + geom_poligon()
@@ -239,7 +246,9 @@ gglpot(covid, aes(x=lon, y=lat, size=cases)) + geom_point()
 
 # CREATE dataset for spatstat and PLOT
 attach(covid)
-covids <- ppp(lon, lat, c(-180, 180), c(-90, 90)) #(c= range dei vettori)
+
+# CREATS AN OBJECT OF CLASS "ppp" REPRESENTING A POINT PATTERN DATASET IN THE TWO DIMENSIONAL PLANE
+covids <- ppp(lon, lat, c(-180, 180), c(-90, 90)) #(c= range dei vettori) 
 d <- density(covids)
 plot(d)
 points(covids, pch=19)
@@ -250,7 +259,7 @@ setwd("/Users/massimilianoapruzzese/Documents/lab")
 # CARICARE .RDATA
 load("spatstat_31_03_2020.RData")
 
-# ls() PER VEDERE I FILES
+# ls() TO SEE FILES
 ls()
 # CARICARE spatsat
 library(spatstat)
@@ -266,11 +275,12 @@ plot(d, col=cl2)
 points(covids)
 
 # INSERIRE DATI SHP IN COASTLINE
-coastlines <- readOGR("ne_10m_coastline.shp")
+coastlines <- readOGR("ne_10m_coastline.shp") #THE FUNCTION READS AN OGR DATA SOURCE AND LAYER INTO A SUITABLE SPATIAL VECTOR OBJECT
 
 # PRIMA INSTALLARE E POI RICHIAMARE LIBRERIA rgdal
 install.packages("rgdal")
-library(rgdal)
+library(rgdal) # PROVIDES BINDINGS TO THE GEOSPATIAL DATA ABSTRACTION LIBRARY (GDAL)
+               # AND ACCESS TO PROJECTION AND TRANSFORMATION OPERATIONS FROM THE PROJ.4 LIBRARY
 
 # plottare COASTLINE
 plot(coastlines, add=TRUE)
@@ -283,7 +293,9 @@ plot(coastlines, add=T, col= "grey")
 # INTERPOLAZIONE
 attach(covid)
 marks(covids) <- covid$cases
-s <- Smooth(covids)
+s <- Smooth(covids) #  FUNCTIONS IMPLEMENTING SINGLE SOURCE OF ERROR STATE SPACE MODELS
+                    # FOR PURPOSES OF TIME SERIES ANALYSIS AND FORECASTING
+
 plot(s)
 cl3 <- colorRampPalette(c('cyan', 'purple', 'red')) (200) 
 plot(s, col=cl3, main="COVID")
@@ -326,7 +338,7 @@ class(Tesid)
 class(Tesippp)
 "ppp"
 
-# ESTRAI O MODIFICA I MARKS ASSOCIATI A UN PLOT DI SET DI DATI
+# ESTRAE O MODIFICA I MARKS ASSOCIATI A UN PLOT DI SET DI DATI
 marks(Tesippp) <- Tesi$Species_richness
 interpol <- Smooth(Tesippp)
 
@@ -348,8 +360,6 @@ plot(interpol, add=T, main="San Marino")
 plot(sanmarino, add=T)
 points(Tesippp, col="green")
 
-# PLOT ORIZZONTALE
-par(mfrow=c(1, 2))
 ########################################################################
 #########################################################################
 #########################################################################
@@ -361,27 +371,28 @@ par(mfrow=c(1, 2))
 #set work space
 setwd("/Users/massimilianoapruzzese/Documents/lab")
 
-# INSTALLARE O RICHIAMARE PACCHETTI
+# RECALL PACKAGES
 library(raster)
 library(ggplot2)
 library(RStoolbox)
 library(rgdal)
 
-# file da caricare: p224r63_2011_masked.grd
+# FILE TO DOWNLOAD: p224r63_2011_masked.grd
+# BRICK CREATE A RASTER BRICK OBJECT FROM A MULTI-LAYER (BAND) FILE. 
 p224r63<- brick("p224r63_2011_masked.grd")
 p224r63_2011 <- brick("p224r63_2011_masked.grd") # ci piace di +
 
 # plottare
 plot(p224r63_2011)
 
-##### salvare R.data
+##### HOW TO SAVE R.data
 
 # setwd
 setwd("/Users/massimilianoapruzzese/Documents/lab")
 # Load file
 load(name_file.Rdata)
+#####
 
-# plot
 plot(p224r63_2011)
 
 # B1: blue
@@ -392,27 +403,26 @@ plot(p224r63_2011)
 # B6: thermal infrared
 # B7: medium infrared
 
-# IMPOSTARE color rampe palette
+# SET GENERAL COLOR RAMPE PALETTE
 cl <- colorRampPalette(c('black','grey','light grey'))(100)
 
-# CAMBIARE col al plot
 plot(p224r63_2011, col=cl)
 
-# COLORRAMP PALETE SOLO DELLA BANDA 1 COL BLU
+# SET COLOR PALETTE FOR BLUE BAND (B1)
 clb <- colorRampPalette(c('dark blue','blue','light blue'))(100)
 
-## attach(data frame) NON FUNZIONA CON PACCHETTO RASTER
-## $ SIMBOLO CHE LEGA LA COLONNA (ES. LA BANDA) AL DATASET (IMAGE)
+## attach(data frame) DOES NOT WORK WITH RASTER PACKAGES
+## USE $ TO PLOT A SPECIFIC BAND
 
 plot(p224r63_2011$B1_sre, col=clb)
 
-# Exercise : plottare banda dell'infrared
+# Exercise : PLOT NIR BAND
 # color ramp palette che varia dal red, orange, yellow
 
 clIR<- colorRampPalette(c("red", "orange", "yellow"))(100)
 plot(p224r63_2011$B4_sre, col=clIR)
 
-# PLOT A 4 BANDE (multiframe)
+# PLOT ALL 4 BANDS (multiframe)
 par(mfrow=c(2,2))
 
 #blue
@@ -431,10 +441,10 @@ plot(p224r63_2011$B3_sre, col=clr)
 clIR<- colorRampPalette(c("red", "orange", "yellow"))(100)
 plot(p224r63_2011$B4_sre, col=clIR)
 
-# chiudere immagini appena plottate
+# CLEAR PLOT SPACE
 dev.off()
 
-# natural colors
+# NATURAL COLOURS
 # R G B= 3 componenti
 # plotRGB(p224r63, r=3, g=2, b=1)
 # B1: blue
@@ -443,53 +453,51 @@ dev.off()
 
 plotRGB(p224r63_2011, r=3, g=2, b=1)
 
-# SE L'IMMAGINE è SCURA -> SI USA L'ARGOMENTO stretch! pe strecciare i colori
+# IF DARK IMMAGE -> USE "STRETCH" ARGOUMENTS
 plotRGB(p224r63, r=3, g=2, b=1, stretch="Lin")
 
-# utilizziamo NIR per vedere la vegetazione
+# USE NIR TO SEE VEGETATION
 plotRGB(p224r63, r=4, g=3, b=2, stretch="Lin")
 
-# SALVARE .pdf
+# SAVE .pdf FILE
 pdf("primgraf.pdf")
 plotRGB(p224r63, r=3, g=2, b=1, stretch="Lin")
 dev.off
 
-#multiframe
+# MULTIFRAME OF ORIGINAL RGB AND NIR BAND IN RED COMPONENT
 par(mfrow=c(1,2))
 plotRGB(p224r63, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63, r=3, g=2, b=1, stretch="Lin")
 
-# utilizziamo NIR per vedere la vegetazione
-# Exerc: nir nella componente green
+# Exerc: NIR IN GREEN COMPONENT
 plotRGB(p224r63, r=3, g=4, b=1, stretch="Lin")
 
-# nir -> blue
+# NIR IN BLUE COMPONENT
 plotRGB(p224r63, r=3, g=2, b=4, stretch="Lin")
 
-### p224r63_1988 <- brick("p224r63_1988_masked.grd") 
+# PLOT p224r63_1988
 p224r63_1988 <- brick("p224r63_1988_masked.grd")
-
-# plottare
 plot(p224r63_1988)
 
-# 4 bands plot (multiframe)
+# 4 BAND PLOT (MULTIFRAME)
 par(mfrow=c(2,2))
 
-# blu
+# BLUE
 plot(p224r63_1988$B1_sre, col=clb)
 
-#green
+# GREEN
 clg <- colorRampPalette(c('dark green','green','light green'))(100)
 plot(p224r63_1988$B2_sre, col=clg)
 
-#red
+# RED
 clr <- colorRampPalette(c('dark red','red','pink'))(100)
 plot(p224r63_1988$B3_sre, col=clr)
-#NIR
+
+# NIR
 clIR<- colorRampPalette(c("red", "orange", "yellow"))(100)
 plot(p224r63_1988$B4_sre, col=clIR)
 
-# chiudere immagini appena plottate
+# CLEAN PLOT
 dev.off()
 
 # natural colors
@@ -501,10 +509,10 @@ dev.off()
 
 plotRGB(p224r63_1988, r=3, g=2, b=1)
 
-# scura -> si utilizza stretch! pe strecciare i colori (argomento)
+# L'IMMAGINE è SCURA ->  "STRETCH" (ARGOUMENT)
 plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
 
-# utilizziamo NIR per vedere la vegetazione
+# USE NIR (NEAR INFRARED MEASUREMENT) per vedere la vegetazione
 plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
 
 # salvare pdf.
@@ -512,12 +520,12 @@ pdf("primgraf.pdf")
 plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
 dev.off
 
-#multiframe
+# MULTIFRAME 
 par(mfrow=c(1,2))
 plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_1988, r=3, g=2, b=1, stretch="Lin")
 
-# Exercise: plot image -> NIR
+### Exercise: plot image -> NIR
 
 # MULTIFRAME PLOTS 1988 e 2011
 par(mfrow=c(1,2))
@@ -529,48 +537,45 @@ plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin", main="2011")
 
 dvi1988 <- (p224r63_1988$B4_sre - p224r63_1988$B3_sre)
 
-# exs: div 2011
+# EXERCISE: div 2011 VEGETATION DIFFERENCE
 dvi2011 <- (p224r63_2011$B4_sre - p224r63_2011$B3_sre)
 
-# multitemporal analysis
+# MULTITEMPORAL ANALYSIS OF VEGETATION DIFFERENCES
 difdvi <- dvi2011 - dvi1988
 plot(difdvi)
 cldifdvi <- colorRampPalette(c('red','white','blue'))(100) # 
 plot(difdvi, col=cldifdvi)
 
-# visualize the uotput
-# multiframe 1988rgb, 2011rgb, difdiv
-
+# VISUALAZE THE UOTPUT WITH MULTIFRAME 1988rgb, 2011rgb, difdiv
 par(mfrow=c(3, 1))
 plotRGB(p224r63_1988, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plot(difdvi, col=cldifdvi)
 dev.off()
 
-# changing the grain (CAMBIARE LA RISOLUZIONE)
-p224r63_2011lr <- aggregate(p224r63_2011, fact=10)
+# CHANGING THE GRAIN (RESOLUTION)
+p224r63_2011lr <- aggregate(p224r63_2011, fact=10) # SPATIAL AGGREGATION OF THEMATIC INFORMATION IN SPATIAL OBJECTS
 par(mfrow=c(2, 1))
 plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
 plotRGB(p224r63_2011lr, r=4, g=3, b=2, stretch="Lin")
 
-# lower resolut.
+# LOWER RESOLUTION
 p224r63_2011lr50 <- aggregate(p224r63_2011, fact=50)
 
-# original 30m
+# MULTIFRAME RESOLUTION
 par(mfrow=c(3, 1))
-plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin")
-plotRGB(p224r63_2011lr, r=4, g=3, b=2, stretch="Lin")
-plotRGB(p224r63_2011lr50, r=4, g=3, b=2, stretch="Lin")
+plotRGB(p224r63_2011, r=4, g=3, b=2, stretch="Lin") # 30m RESOLUTION
+plotRGB(p224r63_2011lr, r=4, g=3, b=2, stretch="Lin") # 300m RESOLUTION
+plotRGB(p224r63_2011lr50, r=4, g=3, b=2, stretch="Lin") # 1500m RESOLUTION
 
+# VEGETATION DIFFERENCE AT LOWER RESOLUTION 1500m 
 dvi2011lr50 <- p224r63_2011lr50$B4_sre - p224r63_2011lr50$B3_sre
-
 p224r63_1988lr50 <- aggregate(p224r63_1988, fact=50)
 dvi1988lr50 <- p224r63_1988lr50$B4_sre - p224r63_1988lr50$B3_sre
-
 difdvilr50 <- dvi2011lr50 - dvi1988lr50
 plot(difdvilr50,col=cldifdvi)
 
-# multiframe finale
+# FINAL MULTIFRAME
 par(mfrow=c(2,1))
 plot(difdvi, col=cldifdvi)
 plot(difdvilr50, col=cldifdvi)
@@ -579,7 +584,7 @@ plot(difdvilr50, col=cldifdvi)
 ###################################################################
 ###################################################################
 
-### 6. r code Multitemp
+### 6. R code Multitemp
 
 # setwd
 setwd("/Users/massimilianoapruzzese/Documents/lab")
@@ -878,5 +883,87 @@ plot(ita, col= clb, zlim= c(20,200))
 # BOXPLOT PER CONFRONTARE LA COPERTURA
 boxplot(ita, horizontal=T,outline=F)
 
+##########################################################################
+##########################################################################
+##########################################################################
 
+########## SDM package - Babak Naimi
+######## sdm IS AN OBJECT-ORIENTED, REPRODUCIBLE AND EXTENSIBLE, PLATFORM FOR SPECIES DITRIBUTION MODELLING
+##################################
+library(sdm)
+library(raster)
+library(rgdal)
+
+install.packages("sdm")
+
+# Check for species
+file <- system.file("external/species.shp", package="sdm") # GET THE LOCATION OF THE SPECIES
+species <- shapefile(file) #  READ THE SHAPFILE
+
+species
+
+species$Occurrence
+
+plot(species)
+
+plot(species[species$Occurrence == 1,],col='blue',pch=16)
+points(species[species$Occurrence == 0,],col='red',pch=16)
+
+# model
+path <- system.file("external", package="sdm") # PATH TO THE FOLDER CONTAINS THE DATA
+
+#predictors
+lst <- list.files(path=path,pattern='asc$',full.names = T) # LIST THE NAME OF THE RASTER FILES
+
+# STACK IS A FUNCTION IN THE RASTER PACKAGE, TO READ/CREATE A MULTI-LAYERES RASTER DATASET
+preds <- stack(lst) # MACKING A RASTER OBJECT
+
+# PLOT THE RASTER OBJECT
+plot(preds)
+plot(preds[[4]]) # JUST PLOT THE 4th LAYER
+# plot(species,add=T)
+points(species[species$Occurrence == 1,],col='blue',pch=16)
+points(species[species$Occurrence == 0,],col='red',pch=16)
+
+
+# MODEL
+# d <- sdmData(formula=Occurrence~., train=species, predictors=preds)
+# d
+
+d <- sdmData(train=species, predictors=preds)
+# You may also want to take part of variables:
+
+# d <- sdmData(formula=Occurrence~precipitation+temperature, train=species, predictors=preds)
+
+# FIT THE MODEL m1
+m1 <- sdm(Occurrence~elevation+precipitation+temperature+vegetation,data=d,methods=c('glm'))
+
+#  MAKE A RASTER (OR MATRIX) WITH PREDICTIONS FROM 1 OR SEVERAL MODELS IN sdmMODEL
+p1 <- predict(m1,newdata=preds)
+# ,filename='p1.img') 
+
+# SET A PALETTE OF COLORS FOR THE PLOTTED IMAGE
+clp <- colorRampPalette(c('darkblue','orange','red','yellow'))(100) # specifying a color scheme
+plot(p1,col=clp)
+
+# SPECIES PRESENT 1/ ABSENCE 0 AS DIFFERENT COLORED POINT ON MAP
+points(species[species$Occurrence == 1,],col='blue',pch=16)
+points(species[species$Occurrence == 0,],col='red',pch=16)
+
+# FIT THE SECOND MODEL m2
+m2 <- sdm(Occurrence~elevation+precipitation+temperature+vegetation,data=d,methods=c('gam'))
+
+# SECOND PREDICTION
+p2 <- predict(m2,newdata=preds) 
+plot(p2,col=clp)
+
+# STACK 2 PREDICTION BASED ON 2 DIFFERENT MODELS AND PLOT TOGETHER
+stackpred <- stack(p1,p2)
+plot(stackpred, col=clp)
+
+##########################################################################
+##########################################################################
+##########################################################################
+
+# THE END
 
