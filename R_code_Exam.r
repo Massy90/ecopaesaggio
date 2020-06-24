@@ -964,3 +964,74 @@ plot(stackpred, col=clp)
 
 # THE END
 
+### Exam Massimiliano Apruzzese
+### FCOVER of Australia after last wildfires
+
+# call all packeges needed
+library(ncdf4)
+library(raster)
+library(rgdal)
+library(spatstat)
+library(maptools)
+library(ggplot2)
+library(igraph)
+
+# Multitemp plot of global Fraction of green Vegetation Cover, with stack
+rlist <- list.files(pattern=".nc", full.names = T)
+list <- lapply(rlist, raster)
+fcover.multitemp <- stack(list)
+cl <- colorRampPalette(c("brown","yellow", "darkgreen"))(100)
+plot(fcover.multitemp, col=cl, main=" ", xlab= c(2017,2018,2019,2020)) # MULTITEMP GLOBAL
+
+# PLOT  ALL IMMAGES MAKING ZOOM ON AUSTRALIA
+extension <- c(100, 160, -45, -5)
+plot(fcover.multitemp, col=cl, ext= extension, main=" ") # ext= extension argument to make zoom
+names(fcover.multitemp)[1] <- c("fcover_2017") # RE-NAMING RASTERS
+names(fcover.multitemp)[2] <- c("fcover_2018")
+names(fcover.multitemp)[3] <- c("fcover_2019")
+names(fcover.multitemp)[4] <- c("fcover_2020")
+names(fcover.multitemp)
+
+# HERE PLOTTING JUST 2019-2020 (ONE AT TIME)
+plot(fcover.multitemp$fcover_2019, col=cl, ext= extension, main="Australia 2019") 
+plot(fcover.multitemp$fcover_2020, col=cl, ext= extension, main="Australia 2020")
+dev.off()
+
+### PATCHES OF SE-AUSTRALIA
+# land: class 1 (red); vegetation: class 2 (green)
+clfire <- colorRampPalette(c("red", "green"))(100)
+extension <- c(140, 160, -45, -5) # closer on veg S-E australia
+a19veg <- crop(fcover.multitemp$fcover_2019, extension)
+a20veg <- crop(fcover.multitemp$fcover_2020, extension)
+a19veg.fire <- reclassify(a19veg, cbind(1,0))
+a20veg.fire <- reclassify(a20veg, cbind(1,0))
+par(mfrow=c(1,2))
+plot(a19veg.fire, col=clfire, ext=extension, main= "FCOVER 2019", sub="S-E Australia")
+plot(a20veg.fire, col=clfire, ext=extension, main= "FCOVER 2020", sub="S-E Australia")
+dev.off()
+
+# DIFFERENCE TO SEE THE REMAINING VEGETATION & PATCHES
+dif_austr_veg <- a20veg-a19veg
+cl1 <- colorRampPalette(c('dark blue','blue','green','orange','yellow','red'))(100)
+plot(dif_austr_veg, col=cl1, main="Difference for Fraction of green Vegetation Cover")
+dev.off()
+
+### CLUMP FUNCTION TO CREATE PATCHES
+a19veg.fire.patches <- clump(a19veg.fire)
+a20veg.fire.patches <- clump(a20veg.fire)
+par(mfrow=c(1,2))
+cl2 <- colorRampPalette(c("black", "blue","darkgreen","orange", "yellow","red", "pink", "white"))(100)
+plot(a19veg.fire.patches, col=cl2)
+plot(a20veg.fire.patches, col=cl2)
+
+### MAX PATCHES a19 = 623
+### MAX PATCHES a20 = 1083
+time <- c("Bf fire", "Af fire")
+npatches <- c(623,1083)
+output <- data.frame(time,npatches)
+attach(output)
+dev.off()
+
+# Barplot the amount of patches before the fire 2019 and after 2020
+ggplot(output, aes(x=time, y=npatches, color="red")) + geom_bar(stat="identity", fill="white")
+
