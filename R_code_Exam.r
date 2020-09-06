@@ -977,7 +977,7 @@ library(ggplot2)
 library(igraph)
 
 # Multitemp plot of global Fraction of green Vegetation Cover, with stack
-rlist <- list.files(pattern=".nc", full.names = T)
+rlist <- list.files(pattern=".nc", full.= T)
 list <- lapply(rlist, raster)
 fcover.multitemp <- stack(list)
 cl <- colorRampPalette(c("brown","yellow", "darkgreen"))(100)
@@ -986,7 +986,7 @@ plot(fcover.multitemp, col=cl, main=" ", xlab= c(2017,2018,2019,2020)) # MULTITE
 # PLOT  ALL IMMAGES MAKING ZOOM ON AUSTRALIA
 extension <- c(100, 160, -45, -5)
 plot(fcover.multitemp, col=cl, ext= extension, main=" ") # ext= extension argument to make zoom
-names(fcover.multitemp)[1] <- c("fcover_2017") # RE-NAMING RASTERS
+(fcover.multitemp)[1] <- c("fcover_2017") # RE-NAMING RASTERS
 names(fcover.multitemp)[2] <- c("fcover_2018")
 names(fcover.multitemp)[3] <- c("fcover_2019")
 names(fcover.multitemp)[4] <- c("fcover_2020")
@@ -1025,7 +1025,7 @@ plot(a19veg.fire.patches, col=cl2)
 plot(a20veg.fire.patches, col=cl2)
 
 ### MAX PATCHES a19 = 623
-### MAX PATCHES a20 = 1083
+### MAX PATCHES a20 = 1088
 time <- c("Bf fire", "Af fire")
 npatches <- c(623,1083)
 output <- data.frame(time,npatches)
