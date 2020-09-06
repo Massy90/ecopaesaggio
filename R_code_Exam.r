@@ -1027,7 +1027,7 @@ plot(a20veg.fire.patches, col=cl2)
 ### MAX PATCHES a19 = 623
 ### MAX PATCHES a20 = 1088
 time <- c("Bf fire", "Af fire")
-npatches <- c(623,1083)
+npatches <- c(623,1088)
 output <- data.frame(time,npatches)
 attach(output)
 dev.off()
